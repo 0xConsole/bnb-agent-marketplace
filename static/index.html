@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BNB Agent Marketplace — Build the Era</title>
+<style>
+:root {
+  --bg: #0B0E11;
+  --surface: #161A1E;
+  --surface2: #1E2329;
+  --border: #2B3139;
+  --text: #EAECEF;
+  --text-dim: #848E9C;
+  --yellow: #F0B90B;
+  --green: #21C08B;
+  --purple: #8B5CF6;
+  --red: #EF4444;
+  --blue: #4F8FF7;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; line-height: 1.5; }
+a { color: var(--yellow); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* Header */
+.header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 16px 24px; position: sticky; top: 0; z-index: 100; }
+.header-inner { max-width: 1400px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; }
+.logo { font-size: 20px; font-weight: 700; color: var(--yellow); }
+.logo span { color: var(--text); font-weight: 400; }
+.nav { display: flex; gap: 24px; align-items: center; }
+.nav a { color: var(--text-dim); font-size: 14px; }
+.nav a:hover { color: var(--text); }
+.badge { background: var(--green); color: #000; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; }
+
+/* Hero */
+.hero { padding: 48px 24px 32px; text-align: center; }
+.hero h1 { font-size: 36px; font-weight: 700; margin-bottom: 12px; }
+.hero p { color: var(--text-dim); font-size: 16px; max-width: 640px; margin: 0 auto; }
+.hero-stats { display: flex; gap: 48px; justify-content: center; margin-top: 32px; flex-wrap: wrap; }
+.stat { text-align: center; }
+.stat-value { font-size: 28px; font-weight: 700; color: var(--yellow); }
+.stat-label { font-size: 12px; color: var(--text-dim); text-transform: uppercase; }
+
+/* Container */
+.container { max-width: 1400px; margin: 0 auto; padding: 0 24px 48px; }
+
+/* Category grid */
+.category-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 32px; }
+@media (max-width: 900px) { .category-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 600px) { .category-grid { grid-template-columns: 1fr; } }
+
+.cat-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 20px; cursor: pointer; transition: border-color 0.2s, transform 0.1s; }
+.cat-card:hover { border-color: var(--yellow); transform: translateY(-2px); }
+.cat-card.active { border-color: var(--yellow); background: var(--surface2); }
+.cat-icon { font-size: 28px; margin-bottom: 8px; }
+.cat-name { font-size: 16px; font-weight: 600; margin-bottom: 4px; }
+.cat-tagline { font-size: 12px; color: var(--text-dim); margin-bottom: 12px; }
+.cat-tools { font-size: 11px; color: var(--text-dim); }
+.cat-count { display: inline-block; margin-left: 8px; color: var(--yellow); }
+
+/* Section title */
+.section-title { font-size: 18px; font-weight: 600; margin: 32px 0 16px; display: flex; align-items: center; gap: 8px; }
+.section-title .api-link { font-size: 12px; color: var(--text-dim); font-weight: 400; }
+
+/* Agent cards */
+.agent-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 16px; }
+.agent-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 16px; }
+.agent-card:hover { border-color: var(--blue); }
+.agent-header { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 12px; }
+.agent-avatar { width: 40px; height: 40px; border-radius: 50%; background: var(--surface2); display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; overflow: hidden; }
+.agent-avatar img { width: 100%; height: 100%; object-fit: cover; }
+.agent-name { font-size: 14px; font-weight: 600; }
+.agent-tags { display: flex; gap: 6px; margin-top: 4px; flex-wrap: wrap; }
+.tag { font-size: 10px; padding: 2px 6px; border-radius: 4px; background: var(--surface2); color: var(--text-dim); }
+.tag-ref { background: rgba(139, 92, 246, 0.15); color: var(--purple); }
+.tag-mcp { background: rgba(33, 192, 139, 0.15); color: var(--green); }
+.tag-x402 { background: rgba(240, 185, 11, 0.15); color: var(--yellow); }
+.agent-desc { font-size: 12px; color: var(--text-dim); margin-bottom: 12px; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.agent-meta { display: flex; justify-content: space-between; font-size: 11px; color: var(--text-dim); padding-top: 12px; border-top: 1px solid var(--border); }
+.agent-actions { margin-top: 12px; display: flex; gap: 8px; }
+.btn { padding: 6px 14px; border-radius: 6px; font-size: 12px; font-weight: 500; border: none; cursor: pointer; transition: opacity 0.2s; }
+.btn:hover { opacity: 0.85; }
+.btn-primary { background: var(--yellow); color: #000; }
+.btn-outline { background: transparent; color: var(--text); border: 1px solid var(--border); }
+
+/* Tool panel */
+.tool-panel { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 20px; margin-bottom: 16px; }
+.tool-panel h3 { font-size: 15px; margin-bottom: 4px; }
+.tool-panel p { font-size: 12px; color: var(--text-dim); margin-bottom: 12px; }
+.tool-result { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 12px; margin-top: 12px; font-family: 'SF Mono', Menlo, monospace; font-size: 11px; max-height: 400px; overflow: auto; white-space: pre-wrap; }
+.tool-params { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
+.param-group { display: flex; flex-direction: column; gap: 2px; }
+.param-group label { font-size: 10px; color: var(--text-dim); }
+.param-group input, .param-group select { background: var(--surface2); border: 1px solid var(--border); color: var(--text); padding: 4px 8px; border-radius: 4px; font-size: 12px; width: 100px; }
+
+/* Report */
+.report-box { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 24px; }
+.report-summary { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px; }
+@media (max-width: 700px) { .report-summary { grid-template-columns: repeat(2, 1fr); } }
+.report-metric { text-align: center; }
+.report-metric .v { font-size: 24px; font-weight: 700; color: var(--green); }
+.report-metric .l { font-size: 11px; color: var(--text-dim); }
+.report-task { border-left: 3px solid var(--yellow); padding: 12px 16px; background: var(--surface2); border-radius: 0 8px 8px 0; margin-bottom: 12px; }
+.report-task h4 { font-size: 14px; margin-bottom: 4px; }
+.report-task .vs { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 8px; }
+.report-task .side { font-size: 12px; }
+.report-task .side h5 { font-size: 11px; color: var(--text-dim); margin-bottom: 4px; }
+
+/* Loading */
+.loading { text-align: center; padding: 48px; color: var(--text-dim); }
+.spinner { display: inline-block; width: 24px; height: 24px; border: 3px solid var(--border); border-top-color: var(--yellow); border-radius: 50%; animation: spin 0.8s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Footer */
+.footer { text-align: center; padding: 24px; color: var(--text-dim); font-size: 12px; border-top: 1px solid var(--border); }
+.footer a { color: var(--text-dim); }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-inner">
+    <div class="logo">BNB Agent Marketplace <span>· Build the Era</span></div>
+    <div class="nav">
+      <a href="#" onclick="showAll();return false;">Categories</a>
+      <a href="#advantage-report" onclick="loadReport();return false;">Advantage Report</a>
+      <a href="/api/health" target="_blank">API</a>
+      <a href="/api/mcp/manifest" target="_blank">MCP Manifest</a>
+      <span class="badge">ERC-8004</span>
+    </div>
+  </div>
+</div>
+
+<div class="hero">
+  <h1>Discover & Activate BNB Chain AI Agents</h1>
+  <p>The canonical marketplace for ERC-8004 agents on BSC. Real agent data from 8004scan, classified into four DeFi categories, each with working MCP tools. Discover → understand → activate, end-to-end.</p>
+  <div class="hero-stats">
+    <div class="stat"><div class="stat-value" id="stat-agents">—</div><div class="stat-label">ERC-8004 Agents</div></div>
+    <div class="stat"><div class="stat-value" id="stat-categories">4</div><div class="stat-label">Categories</div></div>
+    <div class="stat"><div class="stat-value" id="stat-tools">12</div><div class="stat-label">MCP Tools</div></div>
+    <div class="stat"><div class="stat-value" id="stat-chains">—</div><div class="stat-label">Chains</div></div>
+  </div>
+</div>
+
+<div class="container">
+  <!-- Category cards -->
+  <div class="section-title">Agent Categories <span class="api-link">· <a href="/api/categories" target="_blank">/api/categories</a></span></div>
+  <div class="category-grid" id="category-grid"></div>
+
+  <!-- Agents by category -->
+  <div id="agents-section">
+    <div class="section-title">Agents <span class="api-link">· <a href="/api/agents/by-category" target="_blank">/api/agents/by-category</a></span></div>
+    <div id="agents-container"><div class="loading"><div class="spinner"></div><p>Loading agents from 8004scan…</p></div></div>
+  </div>
+
+  <!-- Tools section (per category) -->
+  <div id="tools-section" style="display:none;">
+    <div class="section-title">MCP Tools — <span id="tools-cat-name"></span> <span class="api-link">· <a id="tools-manifest-link" target="_blank">manifest</a></span></div>
+    <div id="tools-container"></div>
+  </div>
+
+  <!-- Advantage Report -->
+  <div id="advantage-report" style="display:none;">
+    <div class="section-title">Agent Advantage Report <span class="api-link">· <a href="/api/advantage-report.md" target="_blank">.md</a> · <a href="/api/advantage-report" target="_blank">.json</a></span></div>
+    <div id="report-container"><div class="loading"><div class="spinner"></div><p>Running 4 real tasks (both ways)…</p></div></div>
+  </div>
+</div>
+
+<div class="footer">
+  BNB Agent Marketplace · <a href="https://github.com/0xConsole/bnb-agent-marketplace" target="_blank">github.com/0xConsole/bnb-agent-marketplace</a> ·
+  Data: <a href="https://8004scan.io" target="_blank">8004scan.io</a> ·
+  Built for the <a href="https://www.bnbchain.org/en/hackathons/smart-money-era" target="_blank">Build the Era</a> hackathon
+</div>
+
+<script>
+const CAT_COLORS = { rebalancing: '#F0B90B', grid_trading: '#21C08B', yield_opt: '#8B5CF6', health_factor: '#EF4444' };
+let CATEGORIES = {};
+let activeCategory = null;
+
+// ---- Init ----
+async function init() {
+  try {
+    const [catsRes, chainsRes] = await Promise.all([
+      fetch('/api/categories').then(r => r.json()),
+      fetch('/api/chains').then(r => r.json()),
+    ]);
+    CATEGORIES = {};
+    catsRes.categories.forEach(c => CATEGORIES[c.id] = c);
+    document.getElementById('stat-tools').textContent = catsRes.total_tools;
+    document.getElementById('stat-chains').textContent = (chainsRes.data?.chains || chainsRes.chains || []).length;
+    renderCategories(catsRes.categories);
+    await loadAgents();
+  } catch (e) {
+    console.error(e);
+    document.getElementById('agents-container').innerHTML = '<p style="color:var(--red)">Failed to load. Check console.</p>';
+  }
+}
+
+function renderCategories(cats) {
+  const grid = document.getElementById('category-grid');
+  grid.innerHTML = cats.map(c => `
+    <div class="cat-card" id="cat-${c.id}" onclick="selectCategory('${c.id}')" style="border-left: 3px solid ${c.color}">
+      <div class="cat-icon">${c.icon}</div>
+      <div class="cat-name">${c.name}</div>
+      <div class="cat-tagline">${c.tagline}</div>
+      <div class="cat-tools">${c.tool_count} MCP tools <span class="cat-count" id="count-${c.id}"></span></div>
+    </div>
+  `).join('');
+}
+
+// ---- Agents ----
+async function loadAgents() {
+  const res = await fetch('/api/agents/by-category').then(r => r.json());
+  document.getElementById('stat-agents').textContent = res.total_agents;
+  const container = document.getElementById('agents-container');
+  const grid = document.createElement('div');
+  grid.className = 'agent-grid';
+  let totalShown = 0;
+  res.categories && Object.entries(res.categories).forEach(([cid, cat]) => {
+    document.getElementById(`count-${cid}`).textContent = `· ${cat.count} agents`;
+    cat.agents.slice(0, 6).forEach(a => {
+      totalShown++;
+      grid.appendChild(agentCard(a, cid));
+    });
+  });
+  container.innerHTML = '';
+  container.appendChild(grid);
+  if (totalShown === 0) container.innerHTML = '<p style="color:var(--text-dim)">No agents loaded.</p>';
+}
+
+function agentCard(a, catId) {
+  const div = document.createElement('div');
+  div.className = 'agent-card';
+  div.style.borderTop = `2px solid ${CAT_COLORS[catId] || '#F0B90B'}`;
+  const avatar = a.image_url
+    ? `<div class="agent-avatar"><img src="${a.image_url}" onerror="this.parentNode.innerHTML='🤖'"></div>`
+    : `<div class="agent-avatar">🤖</div>`;
+  const tags = [];
+  if (a.is_reference) tags.push('<span class="tag tag-ref">reference</span>');
+  if (a.has_mcp || a.mcp_server) tags.push('<span class="tag tag-mcp">MCP</span>');
+  if (a.x402_supported) tags.push('<span class="tag tag-x402">x402</span>');
+  if (a.is_verified) tags.push('<span class="tag tag-mcp" style="color:var(--blue);background:rgba(79,143,247,.15)">verified</span>');
+  const source = a.source === 'reference-architecture' ? 'reference' : '8004scan';
+  const detail = a.agent_id ? `/api/agents/${a.chain_id}/${a.token_id}` : '#';
+  div.innerHTML = `
+    <div class="agent-header">
+      ${avatar}
+      <div style="flex:1;min-width:0;">
+        <div class="agent-name">${esc(a.name)}</div>
+        <div class="agent-tags">${tags.join('')}</div>
+      </div>
+    </div>
+    <div class="agent-desc">${esc(a.description || 'No description')}</div>
+    <div class="agent-meta">
+      <span>${source}${a.is_testnet ? ' · testnet' : ''}</span>
+      <span>★ ${a.total_score || 0} · ${a.total_feedbacks || 0} reviews</span>
+    </div>
+    <div class="agent-actions">
+      <button class="btn btn-primary" onclick="activateAgent('${catId}','${esc(a.id)}')">Activate</button>
+      ${a.agent_id ? `<a class="btn btn-outline" href="${detail}" target="_blank">Details</a>` : ''}
+    </div>
+  `;
+  return div;
+}
+
+function esc(s) { const d = document.createElement('div'); d.textContent = s || ''; return d.innerHTML; }
+
+// ---- Category selection ----
+function selectCategory(catId) {
+  activeCategory = catId;
+  document.querySelectorAll('.cat-card').forEach(c => c.classList.remove('active'));
+  document.getElementById(`cat-${catId}`).classList.add('active');
+  showTools(catId);
+  // scroll to tools
+  document.getElementById('tools-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function showAll() {
+  document.getElementById('tools-section').style.display = 'none';
+  document.getElementById('advantage-report').style.display = 'none';
+  document.getElementById('agents-section').style.display = '';
+  document.querySelectorAll('.cat-card').forEach(c => c.classList.remove('active'));
+  activeCategory = null;
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ---- Tools ----
+function showTools(catId) {
+  const cat = CATEGORIES[catId];
+  if (!cat) return;
+  document.getElementById('tools-section').style.display = '';
+  document.getElementById('tools-cat-name').textContent = cat.name;
+  document.getElementById('tools-manifest-link').href = '/api/mcp/manifest';
+  const container = document.getElementById('tools-container');
+  container.innerHTML = cat.tools.map((t, i) => toolPanel(catId, t, i)).join('');
+  // auto-run first tool
+  runTool(catId, cat.tools[0], 0);
+}
+
+function toolPanel(catId, tool, idx) {
+  const toolKey = catId.replace('_opt','');
+  const endpoint = `/api/tools/${toolKey}/${tool.name}`;
+  let paramsHtml = '';
+  if (tool.parameters) {
+    paramsHtml = Object.entries(tool.parameters).slice(0, 3).map(([k, v]) => {
+      const val = typeof v === 'string' ? v.split(' ').slice(0,3).join(' ') : String(v);
+      return `<div class="param-group"><label>${k}</label><input id="param-${catId}-${idx}-${k}" value="${esc(val)}" placeholder="${esc(String(v).slice(0,40))}"></div>`;
+    }).join('');
+  }
+  return `
+    <div class="tool-panel" id="tool-${catId}-${idx}">
+      <h3>${tool.name}</h3>
+      <p>${tool.description}</p>
+      <div class="tool-params">${paramsHtml}</div>
+      <button class="btn btn-primary" onclick="runTool('${catId}', CATEGORIES['${catId}'].tools[${idx}], ${idx})">Run Tool</button>
+      <div class="tool-result" id="result-${catId}-${idx}">Click "Run Tool" to execute…</div>
+    </div>
+  `;
+}
+
+async function runTool(catId, tool, idx) {
+  const resultEl = document.getElementById(`result-${catId}-${idx}`);
+  resultEl.textContent = 'Running…';
+  try {
+    // collect params
+    const paramEls = document.querySelectorAll(`[id^="param-${catId}-${idx}-"]`);
+    const params = new URLSearchParams();
+    if (tool.parameters) {
+      Object.entries(tool.parameters).forEach(([k]) => {
+        const el = document.getElementById(`param-${catId}-${idx}-${k}`);
+        if (el && el.value) params.append(k, el.value);
+      });
+    }
+    const toolKey = catId.replace('_opt','');
+    const url = `/api/tools/${toolKey}/${tool.name}${params.toString() ? '?' + params.toString() : ''}`;
+    const res = await fetch(url);
+    const data = await res.json();
+    resultEl.textContent = JSON.stringify(data, null, 2);
+  } catch (e) {
+    resultEl.textContent = 'Error: ' + e.message;
+  }
+}
+
+// ---- Activate agent ----
+function activateAgent(catId, agentId) {
+  selectCategory(catId);
+  // highlight tools
+  setTimeout(() => {
+    const panel = document.querySelector(`#tools-container .tool-panel`);
+    if (panel) panel.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }, 300);
+}
+
+// ---- Advantage Report ----
+async function loadReport() {
+  document.getElementById('advantage-report').style.display = '';
+  document.getElementById('agents-section').style.display = 'none';
+  document.getElementById('tools-section').style.display = 'none';
+  document.getElementById('advantage-report').scrollIntoView({ behavior: 'smooth' });
+  const container = document.getElementById('report-container');
+  try {
+    const res = await fetch('/api/advantage-report').then(r => r.json());
+    const s = res.summary;
+    container.innerHTML = `
+      <div class="report-box">
+        <div class="report-summary">
+          <div class="report-metric"><div class="v">${s.total_tasks}</div><div class="l">Tasks Run</div></div>
+          <div class="report-metric"><div class="v">${s.average_speedup_factor}×</div><div class="l">Avg Speedup</div></div>
+          <div class="report-metric"><div class="v">${Math.round(s.total_time_saved_seconds/60)}min</div><div class="l">Time Saved</div></div>
+          <div class="report-metric"><div class="v">$${s.total_cost_saved_usd}</div><div class="l">Cost Saved</div></div>
+        </div>
+        ${res.tasks.map(t => `
+          <div class="report-task">
+            <h4>${esc(t.task)}</h4>
+            <div style="font-size:11px;color:var(--text-dim);margin-bottom:8px;">Category: ${t.category} · High-stakes: ${t.high_stakes ? '✅' : '❌'}</div>
+            <div class="vs">
+              <div class="side">
+                <h5>WITHOUT agent (${t.without_agent.time_seconds}s, $${t.without_agent.cost_usd}, ${t.without_agent.output_quality})</h5>
+                <div style="color:var(--text-dim)">${esc(t.without_agent.method)}</div>
+                ${t.without_agent.errors ? '<div style="color:var(--red);margin-top:4px;">Errors: ' + t.without_agent.errors.map(esc).join('; ') + '</div>' : ''}
+              </div>
+              <div class="side">
+                <h5>WITH agent (${t.with_agent.time_seconds}s, $${t.with_agent.cost_usd}, ${t.with_agent.output_quality})</h5>
+                <div style="color:var(--text-dim)">${esc(t.with_agent.method)}</div>
+                <div style="color:var(--green);margin-top:4px;">Advantage: ${t.advantage.time_speedup_factor}× faster, ${esc(t.advantage.quality_improvement)}</div>
+              </div>
+            </div>
+          </div>
+        `).join('')}
+        <div style="margin-top:16px;padding:16px;background:var(--surface2);border-radius:8px;font-size:13px;">
+          <strong>Conclusion:</strong> ${esc(res.conclusion)}
+        </div>
+      </div>
+    `;
+  } catch (e) {
+    container.innerHTML = '<p style="color:var(--red)">Error: ' + e.message + '</p>';
+  }
+}
+
+init();
+</script>
+</body>
+</html>
