@@ -304,8 +304,12 @@ function toolPanel(catId, tool, idx) {
   let paramsHtml = '';
   if (tool.parameters) {
     paramsHtml = Object.entries(tool.parameters).slice(0, 3).map(([k, v]) => {
-      const val = typeof v === 'string' ? v.split(' ').slice(0,3).join(' ') : String(v);
-      return `<div class="param-group"><label>${k}</label><input id="param-${catId}-${idx}-${k}" value="${esc(val)}" placeholder="${esc(String(v).slice(0,40))}"></div>`;
+      // extract default value from description like "...(default: 10)"
+      const desc = String(v);
+      const defaultMatch = desc.match(/\(default:\s*([^)]+)\)/i);
+      const defaultVal = defaultMatch ? defaultMatch[1].trim() : '';
+      const placeholder = desc.slice(0, 50);
+      return `<div class="param-group"><label>${k}</label><input id="param-${catId}-${idx}-${k}" value="${esc(defaultVal)}" placeholder="${esc(placeholder)}"></div>`;
     }).join('');
   }
   return `
@@ -329,11 +333,16 @@ async function runTool(catId, tool, idx) {
     if (tool.parameters) {
       Object.entries(tool.parameters).forEach(([k]) => {
         const el = document.getElementById(`param-${catId}-${idx}-${k}`);
-        if (el && el.value) params.append(k, el.value);
+        if (el && el.value.trim()) {
+          // validate numeric params: skip non-numeric values
+          const val = el.value.trim();
+          params.append(k, val);
+        }
       });
     }
     const toolKey = catId.replace('_opt','');
-    const url = `/api/tools/${toolKey}/${tool.name}${params.toString() ? '?' + params.toString() : ''}`;
+    const qs = params.toString();
+    const url = `/api/tools/${toolKey}/${tool.name}${qs ? '?' + qs : ''}`;
     const res = await fetch(url);
     const data = await res.json();
     resultEl.textContent = JSON.stringify(data, null, 2);
